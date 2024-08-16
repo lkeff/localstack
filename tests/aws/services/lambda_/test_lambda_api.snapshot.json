@@ -7821,7 +7821,7 @@
     }
   },
   "tests/aws/services/lambda_/test_lambda_api.py::TestLambdaFunction::test_create_lambda_exceptions": {
-    "recorded-date": "10-04-2024, 09:00:26",
+    "recorded-date": "13-08-2024, 10:46:02",
     "recorded-content": {
       "invalid_role_arn_exc": {
         "Error": {
@@ -14049,7 +14049,7 @@
     }
   },
   "tests/aws/services/lambda_/test_lambda_api.py::TestLambdaFunction::test_function_arns": {
-    "recorded-date": "10-04-2024, 09:00:25",
+    "recorded-date": "13-08-2024, 13:09:08",
     "recorded-content": {
       "create-function-arn-response": {
         "CreateEventSourceMappingResponse": null,
@@ -14152,7 +14152,7 @@
       "invalid_function_name_exc": {
         "Error": {
           "Code": "ValidationException",
-          "Message": "1 validation error detected: Value 'invalid:function:name' at 'functionName' failed to satisfy constraint: Member must satisfy regular expression pattern: (arn:(aws[a-zA-Z-]*)?:lambda:)?([a-z]{2}((-gov)|(-iso(b?)))?-[a-z]+-\\d{1}:)?(\\d{12}:)?(function:)?([a-zA-Z0-9-_]+)(:(\\$LATEST|[a-zA-Z0-9-_]+))?"
+          "Message": "1 validation error detected: Value 'invalid:function:name' at 'functionName' failed to satisfy constraint: Member must satisfy regular expression pattern: (arn:(aws[a-zA-Z-]*)?:lambda:)?([a-z]{2}((-gov)|(-iso([a-z]?)))?-[a-z]+-\\d{1}:)?(\\d{12}:)?(function:)?([a-zA-Z0-9-_]+)(:(\\$LATEST|[a-zA-Z0-9-_]+))?"
         },
         "ResponseMetadata": {
           "HTTPHeaders": {},
@@ -14448,7 +14448,7 @@
     }
   },
   "tests/aws/services/lambda_/test_lambda_api.py::TestLambdaFunction::test_invalid_invoke": {
-    "recorded-date": "10-04-2024, 09:09:00",
+    "recorded-date": "13-08-2024, 12:19:17",
     "recorded-content": {
       "invoke_function_name_pattern_exc": {
         "Error": {
@@ -16417,7 +16417,483 @@
     }
   },
   "tests/aws/services/lambda_/test_lambda_api.py::TestPartialARNMatching::test_cross_region_arn_function_access": {
-    "recorded-date": "11-06-2024, 13:06:45",
+    "recorded-date": "15-08-2024, 14:39:06",
     "recorded-content": {}
+  },
+  "tests/aws/services/lambda_/test_lambda_api.py::TestLambdaFunction::test_function_name_and_qualifier_validation[get_function]": {
+    "recorded-date": "15-08-2024, 11:17:55",
+    "recorded-content": {
+      "invalid_characters_in_function_name": {
+        "Code": "ValidationException",
+        "Count": 1,
+        "Errors": [
+          "Value 'my-function!' at 'functionName' failed to satisfy constraint: Member must satisfy regular expression pattern: (arn:(aws[a-zA-Z-]*)?:lambda:)?([a-z]{2}((-gov)|(-iso([a-z]?)))?-[a-z]+-\\d{1}:)?(\\d{12}:)?(function:)?([a-zA-Z0-9-_\\.]+)(:(\\$LATEST|[a-zA-Z0-9-_]+))?"
+        ]
+      },
+      "invalid_characters_in_qualifier": {
+        "Code": "ValidationException",
+        "Count": 1,
+        "Errors": [
+          "Value 'invalid!' at 'qualifier' failed to satisfy constraint: Member must satisfy regular expression pattern: (|[a-zA-Z0-9$_-]+)"
+        ]
+      },
+      "invalid_account_id_in_partial_arn": {
+        "Code": "ValidationException",
+        "Count": 1,
+        "Errors": [
+          "Value 'invalid-account:function:my-function' at 'functionName' failed to satisfy constraint: Member must satisfy regular expression pattern: (arn:(aws[a-zA-Z-]*)?:lambda:)?([a-z]{2}((-gov)|(-iso([a-z]?)))?-[a-z]+-\\d{1}:)?(\\d{12}:)?(function:)?([a-zA-Z0-9-_\\.]+)(:(\\$LATEST|[a-zA-Z0-9-_]+))?"
+        ]
+      },
+      "invalid_region_in_arn": {
+        "Code": "ValidationException",
+        "Count": 1,
+        "Errors": [
+          "Value 'arn:<partition>:lambda:invalid-region:111111111111:function:my-function' at 'functionName' failed to satisfy constraint: Member must satisfy regular expression pattern: (arn:(aws[a-zA-Z-]*)?:lambda:)?([a-z]{2}((-gov)|(-iso([a-z]?)))?-[a-z]+-\\d{1}:)?(\\d{12}:)?(function:)?([a-zA-Z0-9-_\\.]+)(:(\\$LATEST|[a-zA-Z0-9-_]+))?"
+        ]
+      },
+      "non_lambda_arn": {
+        "Code": "ValidationException",
+        "Count": 1,
+        "Errors": [
+          "Value 'arn:<partition>:ec2:<region>:111111111111:instance:i-1234567890abcdef0' at 'functionName' failed to satisfy constraint: Member must satisfy regular expression pattern: (arn:(aws[a-zA-Z-]*)?:lambda:)?([a-z]{2}((-gov)|(-iso([a-z]?)))?-[a-z]+-\\d{1}:)?(\\d{12}:)?(function:)?([a-zA-Z0-9-_\\.]+)(:(\\$LATEST|[a-zA-Z0-9-_]+))?"
+        ]
+      },
+      "function_name_too_long": {
+        "Code": "ResourceNotFoundException",
+        "Message": "Function not found: arn:<partition>:lambda:<region>:111111111111:function:<a:len(65)>"
+      },
+      "function_name_too_long_and_invalid_region": {
+        "Code": "ValidationException",
+        "Count": 2,
+        "Errors": [
+          "Value 'arn:<partition>:lambda:invalid-region:111111111111:function:my-function<a:len(170)>' at 'functionName' failed to satisfy constraint: Member must have length less than or equal to 170",
+          "Value 'arn:<partition>:lambda:invalid-region:111111111111:function:my-function<a:len(170)>' at 'functionName' failed to satisfy constraint: Member must satisfy regular expression pattern: (arn:(aws[a-zA-Z-]*)?:lambda:)?([a-z]{2}((-gov)|(-iso([a-z]?)))?-[a-z]+-\\d{1}:)?(\\d{12}:)?(function:)?([a-zA-Z0-9-_\\.]+)(:(\\$LATEST|[a-zA-Z0-9-_]+))?"
+        ]
+      },
+      "full_arn_and_qualifier_too_long_and_invalid_region": {
+        "Code": "ValidationException",
+        "Count": 3,
+        "Errors": [
+          "Value '<a:len(129)>' at 'qualifier' failed to satisfy constraint: Member must have length less than or equal to 128",
+          "Value 'arn:<partition>:lambda:invalid-region:111111111111:function:my-function-<a:len(170)>' at 'functionName' failed to satisfy constraint: Member must have length less than or equal to 170",
+          "Value 'arn:<partition>:lambda:invalid-region:111111111111:function:my-function-<a:len(170)>' at 'functionName' failed to satisfy constraint: Member must satisfy regular expression pattern: (arn:(aws[a-zA-Z-]*)?:lambda:)?([a-z]{2}((-gov)|(-iso([a-z]?)))?-[a-z]+-\\d{1}:)?(\\d{12}:)?(function:)?([a-zA-Z0-9-_\\.]+)(:(\\$LATEST|[a-zA-Z0-9-_]+))?"
+        ]
+      },
+      "qualifier_too_long": {
+        "Code": "ValidationException",
+        "Count": 1,
+        "Errors": [
+          "Value '<a:len(129)>' at 'qualifier' failed to satisfy constraint: Member must have length less than or equal to 128"
+        ]
+      },
+      "full_arn_with_multiple_qualifiers": {
+        "Code": "ValidationException",
+        "Count": 1,
+        "Errors": [
+          "Value 'arn:<partition>:lambda:<region>:111111111111:function:my-function:1:2' at 'functionName' failed to satisfy constraint: Member must satisfy regular expression pattern: (arn:(aws[a-zA-Z-]*)?:lambda:)?([a-z]{2}((-gov)|(-iso([a-z]?)))?-[a-z]+-\\d{1}:)?(\\d{12}:)?(function:)?([a-zA-Z0-9-_\\.]+)(:(\\$LATEST|[a-zA-Z0-9-_]+))?"
+        ]
+      },
+      "negative_version_number": {
+        "Code": "ResourceNotFoundException",
+        "Message": "Function not found: arn:<partition>:lambda:<region>:111111111111:function:my-function:-1"
+      },
+      "incomplete_arn": {
+        "Code": "ResourceNotFoundException",
+        "Message": "Function not found: arn:<partition>:lambda:<region>:111111111111:function:function"
+      },
+      "partial_arn_with_extra_qualifier": {
+        "Code": "ValidationException",
+        "Count": 1,
+        "Errors": [
+          "Value 'function:my-function:$LATEST:extra' at 'functionName' failed to satisfy constraint: Member must satisfy regular expression pattern: (arn:(aws[a-zA-Z-]*)?:lambda:)?([a-z]{2}((-gov)|(-iso([a-z]?)))?-[a-z]+-\\d{1}:)?(\\d{12}:)?(function:)?([a-zA-Z0-9-_\\.]+)(:(\\$LATEST|[a-zA-Z0-9-_]+))?"
+        ]
+      },
+      "latest_version_with_additional_qualifier": {
+        "Code": "InvalidParameterValueException",
+        "Message": "The derived qualifier from the function name does not match the specified qualifier."
+      },
+      "lowercase_latest_qualifier": {
+        "Code": "ResourceNotFoundException",
+        "Message": "Function not found: arn:<partition>:lambda:<region>:111111111111:function:my-function:$latest"
+      },
+      "missing_region_in_arn": {
+        "Code": "ValidationException",
+        "Count": 1,
+        "Errors": [
+          "Value 'arn:<partition>:lambda::111111111111:function:my-function' at 'functionName' failed to satisfy constraint: Member must satisfy regular expression pattern: (arn:(aws[a-zA-Z-]*)?:lambda:)?([a-z]{2}((-gov)|(-iso([a-z]?)))?-[a-z]+-\\d{1}:)?(\\d{12}:)?(function:)?([a-zA-Z0-9-_\\.]+)(:(\\$LATEST|[a-zA-Z0-9-_]+))?"
+        ]
+      },
+      "missing_account_id_in_arn": {
+        "Code": "ValidationException",
+        "Count": 1,
+        "Errors": [
+          "Value 'arn:<partition>:lambda:<region>::function:my-function' at 'functionName' failed to satisfy constraint: Member must satisfy regular expression pattern: (arn:(aws[a-zA-Z-]*)?:lambda:)?([a-z]{2}((-gov)|(-iso([a-z]?)))?-[a-z]+-\\d{1}:)?(\\d{12}:)?(function:)?([a-zA-Z0-9-_\\.]+)(:(\\$LATEST|[a-zA-Z0-9-_]+))?"
+        ]
+      },
+      "misspelled_latest_in_arn": {
+        "Code": "ValidationException",
+        "Count": 1,
+        "Errors": [
+          "Value 'arn:<partition>:lambda:<region>:111111111111:function:my-function:$LATES' at 'functionName' failed to satisfy constraint: Member must satisfy regular expression pattern: (arn:(aws[a-zA-Z-]*)?:lambda:)?([a-z]{2}((-gov)|(-iso([a-z]?)))?-[a-z]+-\\d{1}:)?(\\d{12}:)?(function:)?([a-zA-Z0-9-_\\.]+)(:(\\$LATEST|[a-zA-Z0-9-_]+))?"
+        ]
+      }
+    }
+  },
+  "tests/aws/services/lambda_/test_lambda_api.py::TestLambdaFunction::test_function_name_and_qualifier_validation[delete_function]": {
+    "recorded-date": "15-08-2024, 11:18:00",
+    "recorded-content": {
+      "invalid_characters_in_function_name": {
+        "Code": "ValidationException",
+        "Count": 1,
+        "Errors": [
+          "Value 'my-function!' at 'functionName' failed to satisfy constraint: Member must satisfy regular expression pattern: (arn:(aws[a-zA-Z-]*)?:lambda:)?([a-z]{2}((-gov)|(-iso([a-z]?)))?-[a-z]+-\\d{1}:)?(\\d{12}:)?(function:)?([a-zA-Z0-9-_]+)(:(\\$LATEST|[a-zA-Z0-9-_]+))?"
+        ]
+      },
+      "invalid_characters_in_qualifier": {
+        "Code": "ValidationException",
+        "Count": 1,
+        "Errors": [
+          "Value 'invalid!' at 'qualifier' failed to satisfy constraint: Member must satisfy regular expression pattern: (|[a-zA-Z0-9$_-]+)"
+        ]
+      },
+      "invalid_account_id_in_partial_arn": {
+        "Code": "ValidationException",
+        "Count": 1,
+        "Errors": [
+          "Value 'invalid-account:function:my-function' at 'functionName' failed to satisfy constraint: Member must satisfy regular expression pattern: (arn:(aws[a-zA-Z-]*)?:lambda:)?([a-z]{2}((-gov)|(-iso([a-z]?)))?-[a-z]+-\\d{1}:)?(\\d{12}:)?(function:)?([a-zA-Z0-9-_]+)(:(\\$LATEST|[a-zA-Z0-9-_]+))?"
+        ]
+      },
+      "invalid_region_in_arn": {
+        "Code": "ValidationException",
+        "Count": 1,
+        "Errors": [
+          "Value 'arn:<partition>:lambda:invalid-region:111111111111:function:my-function' at 'functionName' failed to satisfy constraint: Member must satisfy regular expression pattern: (arn:(aws[a-zA-Z-]*)?:lambda:)?([a-z]{2}((-gov)|(-iso([a-z]?)))?-[a-z]+-\\d{1}:)?(\\d{12}:)?(function:)?([a-zA-Z0-9-_]+)(:(\\$LATEST|[a-zA-Z0-9-_]+))?"
+        ]
+      },
+      "non_lambda_arn": {
+        "Code": "ValidationException",
+        "Count": 1,
+        "Errors": [
+          "Value 'arn:<partition>:ec2:<region>:111111111111:instance:i-1234567890abcdef0' at 'functionName' failed to satisfy constraint: Member must satisfy regular expression pattern: (arn:(aws[a-zA-Z-]*)?:lambda:)?([a-z]{2}((-gov)|(-iso([a-z]?)))?-[a-z]+-\\d{1}:)?(\\d{12}:)?(function:)?([a-zA-Z0-9-_]+)(:(\\$LATEST|[a-zA-Z0-9-_]+))?"
+        ]
+      },
+      "function_name_too_long": {
+        "Code": "ResourceNotFoundException",
+        "Message": "Function not found: arn:<partition>:lambda:<region>:111111111111:function:<a:len(65)>"
+      },
+      "function_name_too_long_and_invalid_region": {
+        "Code": "ValidationException",
+        "Count": 2,
+        "Errors": [
+          "Value 'arn:<partition>:lambda:invalid-region:111111111111:function:my-function<a:len(140)>' at 'functionName' failed to satisfy constraint: Member must have length less than or equal to 140",
+          "Value 'arn:<partition>:lambda:invalid-region:111111111111:function:my-function<a:len(140)>' at 'functionName' failed to satisfy constraint: Member must satisfy regular expression pattern: (arn:(aws[a-zA-Z-]*)?:lambda:)?([a-z]{2}((-gov)|(-iso([a-z]?)))?-[a-z]+-\\d{1}:)?(\\d{12}:)?(function:)?([a-zA-Z0-9-_]+)(:(\\$LATEST|[a-zA-Z0-9-_]+))?"
+        ]
+      },
+      "full_arn_and_qualifier_too_long_and_invalid_region": {
+        "Code": "ValidationException",
+        "Count": 3,
+        "Errors": [
+          "Value '<a:len(129)>' at 'qualifier' failed to satisfy constraint: Member must have length less than or equal to 128",
+          "Value 'arn:<partition>:lambda:invalid-region:111111111111:function:my-function-<a:len(140)>' at 'functionName' failed to satisfy constraint: Member must have length less than or equal to 140",
+          "Value 'arn:<partition>:lambda:invalid-region:111111111111:function:my-function-<a:len(140)>' at 'functionName' failed to satisfy constraint: Member must satisfy regular expression pattern: (arn:(aws[a-zA-Z-]*)?:lambda:)?([a-z]{2}((-gov)|(-iso([a-z]?)))?-[a-z]+-\\d{1}:)?(\\d{12}:)?(function:)?([a-zA-Z0-9-_]+)(:(\\$LATEST|[a-zA-Z0-9-_]+))?"
+        ]
+      },
+      "qualifier_too_long": {
+        "Code": "ValidationException",
+        "Count": 1,
+        "Errors": [
+          "Value '<a:len(129)>' at 'qualifier' failed to satisfy constraint: Member must have length less than or equal to 128"
+        ]
+      },
+      "full_arn_with_multiple_qualifiers": {
+        "Code": "ValidationException",
+        "Count": 1,
+        "Errors": [
+          "Value 'arn:<partition>:lambda:<region>:111111111111:function:my-function:1:2' at 'functionName' failed to satisfy constraint: Member must satisfy regular expression pattern: (arn:(aws[a-zA-Z-]*)?:lambda:)?([a-z]{2}((-gov)|(-iso([a-z]?)))?-[a-z]+-\\d{1}:)?(\\d{12}:)?(function:)?([a-zA-Z0-9-_]+)(:(\\$LATEST|[a-zA-Z0-9-_]+))?"
+        ]
+      },
+      "negative_version_number": {
+        "Code": "InvalidParameterValueException",
+        "Message": "Deletion of aliases is not currently supported."
+      },
+      "incomplete_arn": {
+        "Code": "ResourceNotFoundException",
+        "Message": "Function not found: arn:<partition>:lambda:<region>:111111111111:function:function"
+      },
+      "partial_arn_with_extra_qualifier": {
+        "Code": "ValidationException",
+        "Count": 1,
+        "Errors": [
+          "Value 'function:my-function:$LATEST:extra' at 'functionName' failed to satisfy constraint: Member must satisfy regular expression pattern: (arn:(aws[a-zA-Z-]*)?:lambda:)?([a-z]{2}((-gov)|(-iso([a-z]?)))?-[a-z]+-\\d{1}:)?(\\d{12}:)?(function:)?([a-zA-Z0-9-_]+)(:(\\$LATEST|[a-zA-Z0-9-_]+))?"
+        ]
+      },
+      "latest_version_with_additional_qualifier": {
+        "Code": "InvalidParameterValueException",
+        "Message": "The derived qualifier from the function name does not match the specified qualifier."
+      },
+      "lowercase_latest_qualifier": {
+        "Code": "ResourceNotFoundException",
+        "Message": "Function not found: arn:<partition>:lambda:<region>:111111111111:function:my-function"
+      },
+      "missing_region_in_arn": {
+        "Code": "ValidationException",
+        "Count": 1,
+        "Errors": [
+          "Value 'arn:<partition>:lambda::111111111111:function:my-function' at 'functionName' failed to satisfy constraint: Member must satisfy regular expression pattern: (arn:(aws[a-zA-Z-]*)?:lambda:)?([a-z]{2}((-gov)|(-iso([a-z]?)))?-[a-z]+-\\d{1}:)?(\\d{12}:)?(function:)?([a-zA-Z0-9-_]+)(:(\\$LATEST|[a-zA-Z0-9-_]+))?"
+        ]
+      },
+      "missing_account_id_in_arn": {
+        "Code": "ValidationException",
+        "Count": 1,
+        "Errors": [
+          "Value 'arn:<partition>:lambda:<region>::function:my-function' at 'functionName' failed to satisfy constraint: Member must satisfy regular expression pattern: (arn:(aws[a-zA-Z-]*)?:lambda:)?([a-z]{2}((-gov)|(-iso([a-z]?)))?-[a-z]+-\\d{1}:)?(\\d{12}:)?(function:)?([a-zA-Z0-9-_]+)(:(\\$LATEST|[a-zA-Z0-9-_]+))?"
+        ]
+      },
+      "misspelled_latest_in_arn": {
+        "Code": "ValidationException",
+        "Count": 1,
+        "Errors": [
+          "Value 'arn:<partition>:lambda:<region>:111111111111:function:my-function:$LATES' at 'functionName' failed to satisfy constraint: Member must satisfy regular expression pattern: (arn:(aws[a-zA-Z-]*)?:lambda:)?([a-z]{2}((-gov)|(-iso([a-z]?)))?-[a-z]+-\\d{1}:)?(\\d{12}:)?(function:)?([a-zA-Z0-9-_]+)(:(\\$LATEST|[a-zA-Z0-9-_]+))?"
+        ]
+      }
+    }
+  },
+  "tests/aws/services/lambda_/test_lambda_api.py::TestLambdaFunction::test_function_name_and_qualifier_validation[invoke]": {
+    "recorded-date": "15-08-2024, 11:18:04",
+    "recorded-content": {
+      "invalid_characters_in_function_name": {
+        "Code": "ValidationException",
+        "Count": 1,
+        "Errors": [
+          "Value 'my-function!' at 'functionName' failed to satisfy constraint: Member must satisfy regular expression pattern: (arn:(aws[a-zA-Z-]*)?:lambda:)?([a-z]{2}((-gov)|(-iso([a-z]?)))?-[a-z]+-\\d{1}:)?(\\d{12}:)?(function:)?([a-zA-Z0-9-_\\.]+)(:(\\$LATEST|[a-zA-Z0-9-_]+))?"
+        ]
+      },
+      "invalid_characters_in_qualifier": {
+        "Code": "ValidationException",
+        "Count": 1,
+        "Errors": [
+          "Value 'invalid!' at 'qualifier' failed to satisfy constraint: Member must satisfy regular expression pattern: (|[a-zA-Z0-9$_-]+)"
+        ]
+      },
+      "invalid_account_id_in_partial_arn": {
+        "Code": "ValidationException",
+        "Count": 1,
+        "Errors": [
+          "Value 'invalid-account:function:my-function' at 'functionName' failed to satisfy constraint: Member must satisfy regular expression pattern: (arn:(aws[a-zA-Z-]*)?:lambda:)?([a-z]{2}((-gov)|(-iso([a-z]?)))?-[a-z]+-\\d{1}:)?(\\d{12}:)?(function:)?([a-zA-Z0-9-_\\.]+)(:(\\$LATEST|[a-zA-Z0-9-_]+))?"
+        ]
+      },
+      "invalid_region_in_arn": {
+        "Code": "ValidationException",
+        "Count": 1,
+        "Errors": [
+          "Value 'arn:<partition>:lambda:invalid-region:111111111111:function:my-function' at 'functionName' failed to satisfy constraint: Member must satisfy regular expression pattern: (arn:(aws[a-zA-Z-]*)?:lambda:)?([a-z]{2}((-gov)|(-iso([a-z]?)))?-[a-z]+-\\d{1}:)?(\\d{12}:)?(function:)?([a-zA-Z0-9-_\\.]+)(:(\\$LATEST|[a-zA-Z0-9-_]+))?"
+        ]
+      },
+      "non_lambda_arn": {
+        "Code": "ValidationException",
+        "Count": 1,
+        "Errors": [
+          "Value 'arn:<partition>:ec2:<region>:111111111111:instance:i-1234567890abcdef0' at 'functionName' failed to satisfy constraint: Member must satisfy regular expression pattern: (arn:(aws[a-zA-Z-]*)?:lambda:)?([a-z]{2}((-gov)|(-iso([a-z]?)))?-[a-z]+-\\d{1}:)?(\\d{12}:)?(function:)?([a-zA-Z0-9-_\\.]+)(:(\\$LATEST|[a-zA-Z0-9-_]+))?"
+        ]
+      },
+      "function_name_too_long": {
+        "Code": "ResourceNotFoundException",
+        "Message": "Function not found: arn:<partition>:lambda:<region>:111111111111:function:<a:len(65)>"
+      },
+      "function_name_too_long_and_invalid_region": {
+        "Code": "ValidationException",
+        "Count": 2,
+        "Errors": [
+          "Value 'arn:<partition>:lambda:invalid-region:111111111111:function:my-function<a:len(170)>' at 'functionName' failed to satisfy constraint: Member must have length less than or equal to 170",
+          "Value 'arn:<partition>:lambda:invalid-region:111111111111:function:my-function<a:len(170)>' at 'functionName' failed to satisfy constraint: Member must satisfy regular expression pattern: (arn:(aws[a-zA-Z-]*)?:lambda:)?([a-z]{2}((-gov)|(-iso([a-z]?)))?-[a-z]+-\\d{1}:)?(\\d{12}:)?(function:)?([a-zA-Z0-9-_\\.]+)(:(\\$LATEST|[a-zA-Z0-9-_]+))?"
+        ]
+      },
+      "full_arn_and_qualifier_too_long_and_invalid_region": {
+        "Code": "ValidationException",
+        "Count": 3,
+        "Errors": [
+          "Value '<a:len(129)>' at 'qualifier' failed to satisfy constraint: Member must have length less than or equal to 128",
+          "Value 'arn:<partition>:lambda:invalid-region:111111111111:function:my-function-<a:len(170)>' at 'functionName' failed to satisfy constraint: Member must have length less than or equal to 170",
+          "Value 'arn:<partition>:lambda:invalid-region:111111111111:function:my-function-<a:len(170)>' at 'functionName' failed to satisfy constraint: Member must satisfy regular expression pattern: (arn:(aws[a-zA-Z-]*)?:lambda:)?([a-z]{2}((-gov)|(-iso([a-z]?)))?-[a-z]+-\\d{1}:)?(\\d{12}:)?(function:)?([a-zA-Z0-9-_\\.]+)(:(\\$LATEST|[a-zA-Z0-9-_]+))?"
+        ]
+      },
+      "qualifier_too_long": {
+        "Code": "ValidationException",
+        "Count": 1,
+        "Errors": [
+          "Value '<a:len(129)>' at 'qualifier' failed to satisfy constraint: Member must have length less than or equal to 128"
+        ]
+      },
+      "full_arn_with_multiple_qualifiers": {
+        "Code": "ValidationException",
+        "Count": 1,
+        "Errors": [
+          "Value 'arn:<partition>:lambda:<region>:111111111111:function:my-function:1:2' at 'functionName' failed to satisfy constraint: Member must satisfy regular expression pattern: (arn:(aws[a-zA-Z-]*)?:lambda:)?([a-z]{2}((-gov)|(-iso([a-z]?)))?-[a-z]+-\\d{1}:)?(\\d{12}:)?(function:)?([a-zA-Z0-9-_\\.]+)(:(\\$LATEST|[a-zA-Z0-9-_]+))?"
+        ]
+      },
+      "negative_version_number": {
+        "Code": "ResourceNotFoundException",
+        "Message": "Function not found: arn:<partition>:lambda:<region>:111111111111:function:my-function:-1"
+      },
+      "incomplete_arn": {
+        "Code": "ResourceNotFoundException",
+        "Message": "Function not found: arn:<partition>:lambda:<region>:111111111111:function:function"
+      },
+      "partial_arn_with_extra_qualifier": {
+        "Code": "ValidationException",
+        "Count": 1,
+        "Errors": [
+          "Value 'function:my-function:$LATEST:extra' at 'functionName' failed to satisfy constraint: Member must satisfy regular expression pattern: (arn:(aws[a-zA-Z-]*)?:lambda:)?([a-z]{2}((-gov)|(-iso([a-z]?)))?-[a-z]+-\\d{1}:)?(\\d{12}:)?(function:)?([a-zA-Z0-9-_\\.]+)(:(\\$LATEST|[a-zA-Z0-9-_]+))?"
+        ]
+      },
+      "latest_version_with_additional_qualifier": {
+        "Code": "InvalidParameterValueException",
+        "Message": "The derived qualifier from the function name does not match the specified qualifier."
+      },
+      "lowercase_latest_qualifier": {
+        "Code": "ResourceNotFoundException",
+        "Message": "Function not found: arn:<partition>:lambda:<region>:111111111111:function:my-function:$latest"
+      },
+      "missing_region_in_arn": {
+        "Code": "ValidationException",
+        "Count": 1,
+        "Errors": [
+          "Value 'arn:<partition>:lambda::111111111111:function:my-function' at 'functionName' failed to satisfy constraint: Member must satisfy regular expression pattern: (arn:(aws[a-zA-Z-]*)?:lambda:)?([a-z]{2}((-gov)|(-iso([a-z]?)))?-[a-z]+-\\d{1}:)?(\\d{12}:)?(function:)?([a-zA-Z0-9-_\\.]+)(:(\\$LATEST|[a-zA-Z0-9-_]+))?"
+        ]
+      },
+      "missing_account_id_in_arn": {
+        "Code": "ValidationException",
+        "Count": 1,
+        "Errors": [
+          "Value 'arn:<partition>:lambda:<region>::function:my-function' at 'functionName' failed to satisfy constraint: Member must satisfy regular expression pattern: (arn:(aws[a-zA-Z-]*)?:lambda:)?([a-z]{2}((-gov)|(-iso([a-z]?)))?-[a-z]+-\\d{1}:)?(\\d{12}:)?(function:)?([a-zA-Z0-9-_\\.]+)(:(\\$LATEST|[a-zA-Z0-9-_]+))?"
+        ]
+      },
+      "misspelled_latest_in_arn": {
+        "Code": "ValidationException",
+        "Count": 1,
+        "Errors": [
+          "Value 'arn:<partition>:lambda:<region>:111111111111:function:my-function:$LATES' at 'functionName' failed to satisfy constraint: Member must satisfy regular expression pattern: (arn:(aws[a-zA-Z-]*)?:lambda:)?([a-z]{2}((-gov)|(-iso([a-z]?)))?-[a-z]+-\\d{1}:)?(\\d{12}:)?(function:)?([a-zA-Z0-9-_\\.]+)(:(\\$LATEST|[a-zA-Z0-9-_]+))?"
+        ]
+      }
+    }
+  },
+  "tests/aws/services/lambda_/test_lambda_api.py::TestLambdaFunction::test_function_name_and_qualifier_validation[create_function]": {
+    "recorded-date": "15-08-2024, 11:18:08",
+    "recorded-content": {
+      "invalid_characters_in_function_name": {
+        "Code": "ValidationException",
+        "Count": 1,
+        "Errors": [
+          "Value 'my-function!' at 'functionName' failed to satisfy constraint: Member must satisfy regular expression pattern: (arn:(aws[a-zA-Z-]*)?:lambda:)?([a-z]{2}((-gov)|(-iso([a-z]?)))?-[a-z]+-\\d{1}:)?(\\d{12}:)?(function:)?([a-zA-Z0-9-_]+)(:(\\$LATEST|[a-zA-Z0-9-_]+))?"
+        ]
+      },
+      "invalid_characters_in_qualifier": {
+        "Code": "ValidationException",
+        "Count": 1,
+        "Errors": [
+          "Value 'my-function:invalid!' at 'functionName' failed to satisfy constraint: Member must satisfy regular expression pattern: (arn:(aws[a-zA-Z-]*)?:lambda:)?([a-z]{2}((-gov)|(-iso([a-z]?)))?-[a-z]+-\\d{1}:)?(\\d{12}:)?(function:)?([a-zA-Z0-9-_]+)(:(\\$LATEST|[a-zA-Z0-9-_]+))?"
+        ]
+      },
+      "invalid_account_id_in_partial_arn": {
+        "Code": "ValidationException",
+        "Count": 1,
+        "Errors": [
+          "Value 'invalid-account:function:my-function' at 'functionName' failed to satisfy constraint: Member must satisfy regular expression pattern: (arn:(aws[a-zA-Z-]*)?:lambda:)?([a-z]{2}((-gov)|(-iso([a-z]?)))?-[a-z]+-\\d{1}:)?(\\d{12}:)?(function:)?([a-zA-Z0-9-_]+)(:(\\$LATEST|[a-zA-Z0-9-_]+))?"
+        ]
+      },
+      "invalid_region_in_arn": {
+        "Code": "ValidationException",
+        "Count": 1,
+        "Errors": [
+          "Value 'arn:<partition>:lambda:invalid-region:111111111111:function:my-function' at 'functionName' failed to satisfy constraint: Member must satisfy regular expression pattern: (arn:(aws[a-zA-Z-]*)?:lambda:)?([a-z]{2}((-gov)|(-iso([a-z]?)))?-[a-z]+-\\d{1}:)?(\\d{12}:)?(function:)?([a-zA-Z0-9-_]+)(:(\\$LATEST|[a-zA-Z0-9-_]+))?"
+        ]
+      },
+      "non_lambda_arn": {
+        "Code": "ValidationException",
+        "Count": 1,
+        "Errors": [
+          "Value 'arn:<partition>:ec2:<region>:111111111111:instance:i-1234567890abcdef0' at 'functionName' failed to satisfy constraint: Member must satisfy regular expression pattern: (arn:(aws[a-zA-Z-]*)?:lambda:)?([a-z]{2}((-gov)|(-iso([a-z]?)))?-[a-z]+-\\d{1}:)?(\\d{12}:)?(function:)?([a-zA-Z0-9-_]+)(:(\\$LATEST|[a-zA-Z0-9-_]+))?"
+        ]
+      },
+      "function_name_too_long": {
+        "Code": "InvalidParameterValueException",
+        "Count": 1,
+        "Errors": [
+          "Value '<a:len(65)>' at 'functionName' failed to satisfy constraint: Member must have length less than or equal to 64"
+        ]
+      },
+      "function_name_too_long_and_invalid_region": {
+        "Code": "ValidationException",
+        "Count": 2,
+        "Errors": [
+          "Value 'arn:<partition>:lambda:invalid-region:111111111111:function:my-function<a:len(140)>' at 'functionName' failed to satisfy constraint: Member must have length less than or equal to 140",
+          "Value 'arn:<partition>:lambda:invalid-region:111111111111:function:my-function<a:len(140)>' at 'functionName' failed to satisfy constraint: Member must satisfy regular expression pattern: (arn:(aws[a-zA-Z-]*)?:lambda:)?([a-z]{2}((-gov)|(-iso([a-z]?)))?-[a-z]+-\\d{1}:)?(\\d{12}:)?(function:)?([a-zA-Z0-9-_]+)(:(\\$LATEST|[a-zA-Z0-9-_]+))?"
+        ]
+      },
+      "full_arn_and_qualifier_too_long_and_invalid_region": {
+        "Code": "ValidationException",
+        "Count": 2,
+        "Errors": [
+          "Value 'arn:<partition>:lambda:invalid-region:111111111111:function:my-function-<a:len(140)>:<a:len(129)>' at 'functionName' failed to satisfy constraint: Member must have length less than or equal to 140",
+          "Value 'arn:<partition>:lambda:invalid-region:111111111111:function:my-function-<a:len(140)>:<a:len(129)>' at 'functionName' failed to satisfy constraint: Member must satisfy regular expression pattern: (arn:(aws[a-zA-Z-]*)?:lambda:)?([a-z]{2}((-gov)|(-iso([a-z]?)))?-[a-z]+-\\d{1}:)?(\\d{12}:)?(function:)?([a-zA-Z0-9-_]+)(:(\\$LATEST|[a-zA-Z0-9-_]+))?"
+        ]
+      },
+      "qualifier_too_long": {
+        "Code": "ValidationException",
+        "Count": 1,
+        "Errors": [
+          "Value 'my-function:<a:len(129)>' at 'functionName' failed to satisfy constraint: Member must have length less than or equal to 140"
+        ]
+      },
+      "full_arn_with_multiple_qualifiers": {
+        "Code": "ValidationException",
+        "Count": 1,
+        "Errors": [
+          "Value 'arn:<partition>:lambda:<region>:111111111111:function:my-function:1:2' at 'functionName' failed to satisfy constraint: Member must satisfy regular expression pattern: (arn:(aws[a-zA-Z-]*)?:lambda:)?([a-z]{2}((-gov)|(-iso([a-z]?)))?-[a-z]+-\\d{1}:)?(\\d{12}:)?(function:)?([a-zA-Z0-9-_]+)(:(\\$LATEST|[a-zA-Z0-9-_]+))?"
+        ]
+      },
+      "partial_arn_with_extra_qualifier": {
+        "Code": "ValidationException",
+        "Count": 1,
+        "Errors": [
+          "Value 'function:my-function:$LATEST:extra' at 'functionName' failed to satisfy constraint: Member must satisfy regular expression pattern: (arn:(aws[a-zA-Z-]*)?:lambda:)?([a-z]{2}((-gov)|(-iso([a-z]?)))?-[a-z]+-\\d{1}:)?(\\d{12}:)?(function:)?([a-zA-Z0-9-_]+)(:(\\$LATEST|[a-zA-Z0-9-_]+))?"
+        ]
+      },
+      "latest_version_with_additional_qualifier": {
+        "Code": "ValidationException",
+        "Count": 1,
+        "Errors": [
+          "Value 'arn:<partition>:lambda:<region>:111111111111:function:my-function:$LATEST:1' at 'functionName' failed to satisfy constraint: Member must satisfy regular expression pattern: (arn:(aws[a-zA-Z-]*)?:lambda:)?([a-z]{2}((-gov)|(-iso([a-z]?)))?-[a-z]+-\\d{1}:)?(\\d{12}:)?(function:)?([a-zA-Z0-9-_]+)(:(\\$LATEST|[a-zA-Z0-9-_]+))?"
+        ]
+      },
+      "lowercase_latest_qualifier": {
+        "Code": "ValidationException",
+        "Count": 1,
+        "Errors": [
+          "Value 'arn:<partition>:lambda:<region>:111111111111:function:my-function:$latest' at 'functionName' failed to satisfy constraint: Member must satisfy regular expression pattern: (arn:(aws[a-zA-Z-]*)?:lambda:)?([a-z]{2}((-gov)|(-iso([a-z]?)))?-[a-z]+-\\d{1}:)?(\\d{12}:)?(function:)?([a-zA-Z0-9-_]+)(:(\\$LATEST|[a-zA-Z0-9-_]+))?"
+        ]
+      },
+      "missing_region_in_arn": {
+        "Code": "ValidationException",
+        "Count": 1,
+        "Errors": [
+          "Value 'arn:<partition>:lambda::111111111111:function:my-function' at 'functionName' failed to satisfy constraint: Member must satisfy regular expression pattern: (arn:(aws[a-zA-Z-]*)?:lambda:)?([a-z]{2}((-gov)|(-iso([a-z]?)))?-[a-z]+-\\d{1}:)?(\\d{12}:)?(function:)?([a-zA-Z0-9-_]+)(:(\\$LATEST|[a-zA-Z0-9-_]+))?"
+        ]
+      },
+      "missing_account_id_in_arn": {
+        "Code": "ValidationException",
+        "Count": 1,
+        "Errors": [
+          "Value 'arn:<partition>:lambda:<region>::function:my-function' at 'functionName' failed to satisfy constraint: Member must satisfy regular expression pattern: (arn:(aws[a-zA-Z-]*)?:lambda:)?([a-z]{2}((-gov)|(-iso([a-z]?)))?-[a-z]+-\\d{1}:)?(\\d{12}:)?(function:)?([a-zA-Z0-9-_]+)(:(\\$LATEST|[a-zA-Z0-9-_]+))?"
+        ]
+      },
+      "misspelled_latest_in_arn": {
+        "Code": "ValidationException",
+        "Count": 1,
+        "Errors": [
+          "Value 'arn:<partition>:lambda:<region>:111111111111:function:my-function:$LATES' at 'functionName' failed to satisfy constraint: Member must satisfy regular expression pattern: (arn:(aws[a-zA-Z-]*)?:lambda:)?([a-z]{2}((-gov)|(-iso([a-z]?)))?-[a-z]+-\\d{1}:)?(\\d{12}:)?(function:)?([a-zA-Z0-9-_]+)(:(\\$LATEST|[a-zA-Z0-9-_]+))?"
+        ]
+      }
+    }
   }
 }

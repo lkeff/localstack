@@ -45,7 +45,7 @@
     "last_validated_date": "2024-04-10T08:58:47+00:00"
   },
   "tests/aws/services/lambda_/test_lambda_api.py::TestLambdaFunction::test_create_lambda_exceptions": {
-    "last_validated_date": "2024-04-10T09:00:26+00:00"
+    "last_validated_date": "2024-08-13T10:46:02+00:00"
   },
   "tests/aws/services/lambda_/test_lambda_api.py::TestLambdaFunction::test_delete_on_nonexisting_version": {
     "last_validated_date": "2024-04-10T08:59:42+00:00"
@@ -57,10 +57,25 @@
     "last_validated_date": "2024-04-10T08:59:14+00:00"
   },
   "tests/aws/services/lambda_/test_lambda_api.py::TestLambdaFunction::test_function_arns": {
-    "last_validated_date": "2024-04-10T09:00:24+00:00"
+    "last_validated_date": "2024-08-13T13:09:05+00:00"
   },
   "tests/aws/services/lambda_/test_lambda_api.py::TestLambdaFunction::test_function_lifecycle": {
     "last_validated_date": "2024-04-10T08:59:22+00:00"
+  },
+  "tests/aws/services/lambda_/test_lambda_api.py::TestLambdaFunction::test_function_name_and_qualifier_validation": {
+    "last_validated_date": "2024-08-14T15:25:00+00:00"
+  },
+  "tests/aws/services/lambda_/test_lambda_api.py::TestLambdaFunction::test_function_name_and_qualifier_validation[create_function]": {
+    "last_validated_date": "2024-08-15T11:18:08+00:00"
+  },
+  "tests/aws/services/lambda_/test_lambda_api.py::TestLambdaFunction::test_function_name_and_qualifier_validation[delete_function]": {
+    "last_validated_date": "2024-08-15T11:18:00+00:00"
+  },
+  "tests/aws/services/lambda_/test_lambda_api.py::TestLambdaFunction::test_function_name_and_qualifier_validation[get_function]": {
+    "last_validated_date": "2024-08-15T11:17:55+00:00"
+  },
+  "tests/aws/services/lambda_/test_lambda_api.py::TestLambdaFunction::test_function_name_and_qualifier_validation[invoke]": {
+    "last_validated_date": "2024-08-15T11:18:04+00:00"
   },
   "tests/aws/services/lambda_/test_lambda_api.py::TestLambdaFunction::test_function_partial_advanced_logging_configuration_update[partial_config0]": {
     "last_validated_date": "2024-04-10T08:58:53+00:00"
@@ -99,7 +114,7 @@
     "last_validated_date": "2024-04-10T09:00:08+00:00"
   },
   "tests/aws/services/lambda_/test_lambda_api.py::TestLambdaFunction::test_invalid_invoke": {
-    "last_validated_date": "2024-04-10T09:09:00+00:00"
+    "last_validated_date": "2024-08-13T12:19:17+00:00"
   },
   "tests/aws/services/lambda_/test_lambda_api.py::TestLambdaFunction::test_lambda_code_location_s3": {
     "last_validated_date": "2024-04-10T09:00:17+00:00"
