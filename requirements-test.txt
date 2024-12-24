@@ -170,7 +170,7 @@ incremental==24.7.2
     # via localstack-twisted
 iniconfig==2.0.0
     # via pytest
-jinja2==3.1.4
+jinja2==3.1.5
     # via moto-ext
 jmespath==1.0.1
     # via
