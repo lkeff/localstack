@@ -31,7 +31,7 @@ click==8.1.7
     # via localstack-core (pyproject.toml)
 constantly==23.10.4
     # via localstack-twisted
-cryptography==43.0.0
+cryptography==44.0.1
     # via
     #   localstack-core (pyproject.toml)
     #   pyopenssl
@@ -43,7 +43,7 @@ dnspython==2.6.1
     # via localstack-core (pyproject.toml)
 docker==7.1.0
     # via localstack-core (pyproject.toml)
-h11==0.14.0
+h11==0.16.0
     # via
     #   hypercorn
     #   wsproto
@@ -140,7 +140,7 @@ urllib3==2.2.2
     #   docker
     #   localstack-core (pyproject.toml)
     #   requests
-werkzeug==3.0.3
+werkzeug==3.0.6
     # via
     #   localstack-core (pyproject.toml)
     #   rolo
