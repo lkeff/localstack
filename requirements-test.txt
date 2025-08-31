@@ -99,7 +99,7 @@ coverage==7.6.1
     # via localstack-core (pyproject.toml)
 crontab==1.0.1
     # via localstack-core
-cryptography==42.0.8
+cryptography==44.0.1
     # via
     #   joserfc
     #   localstack-core
@@ -135,7 +135,7 @@ events==0.5
     # via opensearch-py
 graphql-core==3.2.3
     # via moto-ext
-h11==0.14.0
+h11==0.16.0
     # via
     #   httpcore
     #   hypercorn
@@ -170,7 +170,7 @@ incremental==24.7.2
     # via localstack-twisted
 iniconfig==2.0.0
     # via pytest
-jinja2==3.1.4
+jinja2==3.1.6
     # via moto-ext
 jmespath==1.0.1
     # via
@@ -429,7 +429,7 @@ urllib3==2.2.2
     #   responses
 websocket-client==1.8.0
     # via localstack-core (pyproject.toml)
-werkzeug==3.0.3
+werkzeug==3.0.6
     # via
     #   localstack-core
     #   moto-ext
