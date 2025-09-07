@@ -146,7 +146,7 @@ werkzeug==3.0.3
     #   rolo
 wsproto==1.2.0
     # via hypercorn
-xmltodict==0.13.0
+xmltodict==0.15.0
     # via localstack-core (pyproject.toml)
 zope-interface==7.0.1
     # via localstack-twisted
